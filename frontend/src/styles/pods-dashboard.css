@@ -1,0 +1,137 @@
+.pods-dashboard {
+  padding: 40px;
+  background: #f8fafc;
+  min-height: 100vh;
+}
+.pods-dashboard-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+.pods-dashboard-title {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  letter-spacing: -1px;
+}
+.pods-dashboard-controls {
+  display: flex;
+  gap: 15px;
+  align-items: flex-start;
+}
+.pods-dashboard-select {
+  padding: 10px 40px 10px 15px;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  font-weight: 600;
+  background: #fff;
+  color: #0f172a;
+  cursor: pointer;
+  min-width: 180px;
+  outline: 0;
+  font-size: 13px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='2'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+.pods-dashboard-select option {
+  color: #0f172a;
+  background: #fff;
+}
+.pods-dashboard-select-group {
+  border-color: #f59e0b;
+}
+.pods-dashboard-select-status {
+  border-color: #22c55e;
+}
+.pods-dashboard-refresh {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.pods-dashboard-refresh-button {
+  padding: 10px 22px;
+  background: #0f172a;
+  color: #fff;
+  border: 0;
+  border-radius: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  font-size: 13px;
+}
+.pods-dashboard-refresh-time {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 4px;
+  font-weight: 700;
+}
+.pods-dashboard-table-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+}
+.pods-dashboard-table {
+  width: 85%;
+  max-width: 800px;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+.pods-dashboard-table th {
+  padding: 16px 24px;
+  font-size: 11px;
+  color: #94a3b8;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: center;
+  width: 50%;
+}
+.pods-dashboard-table tr {
+  border-bottom: 1px solid #f8fafc;
+}
+.pods-dashboard-table td {
+  padding: 16px 24px;
+  font-size: 14px;
+  color: #475569;
+  text-align: center;
+}
+.pods-dashboard-name {
+  font-weight: 600 !important;
+  color: #0f172a !important;
+}
+.pods-dashboard-empty {
+  padding: 50px !important;
+  color: #94a3b8 !important;
+  font-style: italic;
+}
+.pods-dashboard-badge {
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  display: inline-block;
+  min-width: 100px;
+  text-align: center;
+}
+.pods-dashboard-badge-running {
+  background: #dcfce7;
+  color: #166534;
+}
+.pods-dashboard-badge-succeeded {
+  background: #e5e7eb;
+  color: #374151;
+}
+.pods-dashboard-badge-failed,
+.pods-dashboard-badge-pending,
+.pods-dashboard-badge-unknown {
+  background: #fee2e2;
+  color: #991b1b;
+}

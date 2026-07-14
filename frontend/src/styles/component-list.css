@@ -1,0 +1,228 @@
+.component-list-container {
+  padding: 30px;
+}
+.component-list-title {
+  margin-bottom: 20px;
+  font-weight: 800;
+  color: #1e293b;
+}
+.component-list-filter-bar {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 25px;
+  align-items: flex-end;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+.component-list-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.component-list-label {
+  font-size: 11px;
+  font-weight: bold;
+}
+.component-list-select {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  min-width: 200px;
+}
+.component-list-search-btn {
+  padding: 9px 18px;
+  background: #0f172a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.component-list-card {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.component-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.component-list-thead {
+  background: #f9f9f9;
+}
+.component-list-thead th {
+  padding: 12px;
+  font-size: 12px;
+  color: #888;
+}
+.pod-column {
+  width: 15%;
+  text-align: left;
+}
+.name-column {
+  width: 40%;
+  text-align: left;
+}
+.status-column {
+  width: 20%;
+  text-align: center;
+}
+.restart-column {
+  width: 25%;
+  text-align: center;
+}
+.component-list-row {
+  border-bottom: 1px solid #eee;
+}
+.component-list-td {
+  padding: 12px;
+  font-size: 13px;
+}
+.component-list-td-bold {
+  padding: 12px;
+  font-size: 13px;
+  font-weight: bold;
+}
+.component-list-td-center {
+  padding: 12px;
+  font-size: 13px;
+  text-align: center;
+}
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+}
+.status-online {
+  background: #dcfce7;
+  color: #166534;
+}
+.status-offline {
+  background: #fee2e2;
+  color: #991b1b;
+}
+.restart-btn {
+  padding: 6px 12px;
+  background: #dc2626;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+}
+.restart-btn-disabled {
+  padding: 6px 12px;
+  background: #fca5a5;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: not-allowed;
+  font-size: 12px;
+  font-weight: bold;
+}
+.component-list-empty {
+  padding: 40px;
+  text-align: center;
+  color: #aaa;
+}
+.component-list-error {
+  padding: 10px;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  font-size: 13px;
+}
+.component-list-search-input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  min-width: 260px;
+  font-size: 13px;
+}
+.component-list-filter-bar {
+  display: flex;
+  gap: 15px;
+  align-items: flex-end;
+  margin-bottom: 25px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  flex-wrap: wrap;
+}
+.action-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.action-menu-button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #111827;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.action-menu-button:hover {
+  background: #f3f4f6;
+}
+
+.action-menu-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-menu-dropdown {
+  position: absolute;
+  right: 0;
+  top: 38px;
+  min-width: 140px;
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  z-index: 100;
+}
+
+.action-menu-item {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: #ffffff;
+  color: #111827;
+  text-align: left;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s ease;
+}
+
+.action-menu-item:hover {
+  background: #f3f4f6;
+}
+
+.action-menu-item:disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.action-menu-item-danger {
+  color: #dc2626;
+}
+
+.action-menu-item-danger:hover {
+  background: #fee2e2;
+}

@@ -1,0 +1,12 @@
+{
+  "name": "siebel-healthy-dashboard-launcher",
+  "version": "1.0.0",
+  "main": "launcher.js",
+  "scripts": {
+    "start": "node launcher.js"
+  },
+  "dependencies": {
+    "extract-zip": "^2.0.1",
+    "wait-on": "^8.0.1"
+  }
+}
