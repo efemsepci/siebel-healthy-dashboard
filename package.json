@@ -1,0 +1,31 @@
+{
+  "name": "siebel-healthy-dashboard",
+  "version": "1.0.0",
+  "bin": "launcher/launcher.js",
+  "main": "launcher/launcher.js",
+  "scripts": {
+    "build": "pkg ."
+  },
+  "dependencies": {
+    "extract-zip": "^2.0.1",
+    "wait-on": "^8.0.1"
+  },
+  "devDependencies": {
+    "pkg": "^5.8.1"
+  },
+  "pkg": {
+    "scripts": [
+      "launcher/launcher.js",
+      "launcher/updater.js"
+    ],
+    "assets": [
+      "backend/**/*",
+      "frontend/dist/**/*",
+      "version.json"
+    ],
+    "targets": [
+      "node18-win-x64"
+    ],
+    "outputPath": "release"
+  }
+}

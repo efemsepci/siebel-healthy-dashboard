@@ -2,49 +2,50 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 const extract = require("extract-zip");
+const { exec } = require("child_process");
 
 const ROOT = path.resolve(__dirname, "..");
 
 const VERSION_FILE = path.join(ROOT, "version.json");
 
-const TEMP_DIR = path.join(ROOT, ".update");
-const ZIP_FILE = path.join(TEMP_DIR, "app.zip");
-const EXTRACT_DIR = path.join(TEMP_DIR, "extract");
+const UPDATE_DIR = path.join(ROOT, ".update");
+const ZIP_FILE = path.join(UPDATE_DIR, "app.zip");
+const EXTRACT_DIR = path.join(UPDATE_DIR, "extract");
+const UPDATE_BAT = path.join(ROOT, "update.bat");
 
-// KENDİ BİLGİLERİNİ GİR
-const OWNER = "GITHUB_USERNAME";
-const REPO = "GITHUB_REPO";
+const OWNER = "efemsepci";
+const REPO = "siebel-healthy-dashboard";
 
 function getLocalVersion() {
   if (!fs.existsSync(VERSION_FILE)) {
     return "0.0.0";
   }
 
-  return JSON.parse(fs.readFileSync(VERSION_FILE, "utf8")).version;
+  const data = JSON.parse(fs.readFileSync(VERSION_FILE, "utf8"));
+
+  return data.version;
 }
 
-function get(url) {
+function request(url) {
   return new Promise((resolve, reject) => {
     https
       .get(
         url,
         {
           headers: {
-            "User-Agent": "Siebel-Healthy-Dashboard",
+            "User-Agent": "SiebelHealthyDashboard",
           },
         },
-        (res) => {
+        (response) => {
           let data = "";
 
-          res.on("data", (chunk) => {
-            data += chunk;
-          });
+          response.on("data", (chunk) => (data += chunk));
 
-          res.on("end", () => {
+          response.on("end", () => {
             try {
               resolve(JSON.parse(data));
-            } catch (e) {
-              reject(e);
+            } catch (err) {
+              reject(err);
             }
           });
         },
@@ -55,32 +56,47 @@ function get(url) {
 
 function download(url, destination) {
   return new Promise((resolve, reject) => {
-    const file = fs.createWriteStream(destination);
-
-    https
-      .get(
-        url,
-        {
-          headers: {
-            "User-Agent": "Siebel-Healthy-Dashboard",
+    function startDownload(downloadUrl) {
+      https
+        .get(
+          downloadUrl,
+          {
+            headers: {
+              "User-Agent": "SiebelHealthyDashboard",
+            },
           },
-        },
-        (response) => {
-          response.pipe(file);
+          (response) => {
+            if (
+              response.statusCode >= 300 &&
+              response.statusCode < 400 &&
+              response.headers.location
+            ) {
+              return startDownload(response.headers.location);
+            }
 
-          file.on("finish", () => {
-            file.close(resolve);
-          });
-        },
-      )
-      .on("error", (err) => {
-        fs.unlink(destination, () => {});
-        reject(err);
-      });
+            if (response.statusCode !== 200) {
+              return reject(
+                new Error(`Download failed ${response.statusCode}`),
+              );
+            }
+
+            const file = fs.createWriteStream(destination);
+
+            response.pipe(file);
+
+            file.on("finish", () => {
+              file.close(resolve);
+            });
+          },
+        )
+        .on("error", reject);
+    }
+
+    startDownload(url);
   });
 }
 
-function removeIfExists(target) {
+function remove(target) {
   if (fs.existsSync(target)) {
     fs.rmSync(target, {
       recursive: true,
@@ -89,10 +105,59 @@ function removeIfExists(target) {
   }
 }
 
-function copyFolder(source, destination) {
-  fs.cpSync(source, destination, {
-    recursive: true,
-  });
+function createUpdateBat() {
+  const bat = `
+@echo off
+
+cd /d "${ROOT}"
+
+echo Current directory:
+cd
+
+
+echo Updating application...
+
+
+timeout /t 2 > nul
+
+
+echo Backend updating...
+
+xcopy ".update\\extract\\backend" "backend" /E /Y /I
+
+echo Backend updated.
+
+
+echo Frontend updating...
+
+xcopy ".update\\extract\\frontend" "frontend" /E /Y /I
+
+echo Frontend updated.
+
+
+echo Version updating...
+
+copy ".update\\extract\\version.json" "version.json" /Y
+
+echo Version updated.
+
+
+echo Cleaning...
+
+rmdir /S /Q ".update"
+
+
+echo Update completed.
+
+
+pause
+
+
+start "" node "launcher\\launcher.js"
+
+`;
+
+  fs.writeFileSync(UPDATE_BAT, bat.trim(), "utf8");
 }
 
 async function check() {
@@ -100,34 +165,41 @@ async function check() {
 
   const localVersion = getLocalVersion();
 
-  const release = await get(
+  const release = await request(
     `https://api.github.com/repos/${OWNER}/${REPO}/releases/latest`,
   );
 
-  const remoteVersion = release.tag_name.replace("v", "");
+  if (!release.tag_name) {
+    throw new Error("GitHub release bulunamadı.");
+  }
 
-  console.log("Local Version :", localVersion);
+  const remoteVersion = release.tag_name.replace(/^v/, "");
+
+  console.log("Local Version:", localVersion);
+
   console.log("Remote Version:", remoteVersion);
 
   if (localVersion === remoteVersion) {
     console.log("Uygulama güncel.");
-    return;
+
+    return false;
   }
 
   console.log("Yeni sürüm bulundu.");
 
-  removeIfExists(TEMP_DIR);
+  remove(UPDATE_DIR);
 
-  fs.mkdirSync(TEMP_DIR);
-  fs.mkdirSync(EXTRACT_DIR);
+  fs.mkdirSync(EXTRACT_DIR, {
+    recursive: true,
+  });
 
-  const asset = release.assets.find((a) => a.name === "app.zip");
+  const asset = release.assets.find((x) => x.name === "app.zip");
 
   if (!asset) {
-    throw new Error("Release içinde app.zip bulunamadı.");
+    throw new Error("app.zip bulunamadı.");
   }
 
-  console.log("app.zip indiriliyor...");
+  console.log("Download başlıyor...");
 
   await download(asset.browser_download_url, ZIP_FILE);
 
@@ -137,22 +209,13 @@ async function check() {
     dir: EXTRACT_DIR,
   });
 
-  // backend
-  removeIfExists(path.join(ROOT, "backend"));
+  console.log("Update script hazırlanıyor...");
 
-  copyFolder(path.join(EXTRACT_DIR, "backend"), path.join(ROOT, "backend"));
+  createUpdateBat();
 
-  // frontend
-  removeIfExists(path.join(ROOT, "frontend"));
+  console.log("Update hazır.");
 
-  copyFolder(path.join(EXTRACT_DIR, "frontend"), path.join(ROOT, "frontend"));
-
-  // version.json
-  fs.copyFileSync(path.join(EXTRACT_DIR, "version.json"), VERSION_FILE);
-
-  removeIfExists(TEMP_DIR);
-
-  console.log("Uygulama güncellendi.");
+  return true;
 }
 
 module.exports = {

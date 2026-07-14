@@ -18,7 +18,7 @@ const EnvironmentLinks = ({ ortam }) => {
     <div className="environment-links">
       <header className="environment-links-header">
         <div>
-          <h2 className="environment-links-title">Ortam Linkleri</h2>
+          <h2 className="environment-links-title">Ortam Linkleri - TESTTTT</h2>
 
           <p className="environment-links-subtitle">
             {ortam === "mobil"
