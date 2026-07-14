@@ -4,7 +4,7 @@ const https = require("https");
 const extract = require("extract-zip");
 const { exec } = require("child_process");
 
-const ROOT = path.resolve(__dirname, "..");
+const ROOT = path.dirname(process.execPath);
 
 const VERSION_FILE = path.join(ROOT, "version.json");
 
@@ -147,13 +147,10 @@ echo Cleaning...
 rmdir /S /Q ".update"
 
 
-echo Update completed.
+echo Update completed. Run .exe again.
 
 
 pause
-
-
-start "" node "launcher\\launcher.js"
 
 `;
 
