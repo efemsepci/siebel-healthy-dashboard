@@ -124,36 +124,47 @@ async function waitForReplicas(namespace, stsName, replicaCount) {
   }
 }
 
+async function getReplicaCount(namespace, stsName) {
+  const result = await run(
+    `oc get sts ${stsName} -n ${namespace} -o jsonpath={.spec.replicas}`,
+  );
+
+  return Number(result.stdout.trim());
+}
+
 async function restartEnvironment(namespace) {
   const safeNs = namespace.replace(/[^a-zA-Z0-9-]/g, "");
 
   console.log("===== ENVIRONMENT RESTART START =====");
 
-  // SAI DOWN
-  // await run(`oc scale sts siebel-sai --replicas=0 -n ${safeNs}`);
+  // Mevcut replica sayılarını sakla
+  const replicas = {
+    sai: await getReplicaCount(safeNs, "siebel-sai"),
+    ses: await getReplicaCount(safeNs, "siebel-ses"),
+    cgw: await getReplicaCount(safeNs, "siebel-cgw"),
+  };
+
+  // DOWN
+  await run(`oc scale sts siebel-sai --replicas=0 -n ${safeNs}`);
   await waitForReplicas(safeNs, "siebel-sai", 0);
 
-  // SES DOWN
-  // await run(`oc scale sts siebel-ses --replicas=0 -n ${safeNs}`);
+  await run(`oc scale sts siebel-ses --replicas=0 -n ${safeNs}`);
   await waitForReplicas(safeNs, "siebel-ses", 0);
 
-  // CGW DOWN
-  // await run(`oc scale sts siebel-cgw --replicas=0 -n ${safeNs}`);
+  await run(`oc scale sts siebel-cgw --replicas=0 -n ${safeNs}`);
   await waitForReplicas(safeNs, "siebel-cgw", 0);
 
   console.log("Tüm StatefulSetler durduruldu.");
 
-  // CGW UP
-  // await run(`oc scale sts siebel-cgw --replicas=3 -n ${safeNs}`);
-  await waitForReplicas(safeNs, "siebel-cgw", 3);
+  // UP (eski replica sayılarına dön)
+  await run(`oc scale sts siebel-cgw --replicas=${replicas.cgw} -n ${safeNs}`);
+  await waitForReplicas(safeNs, "siebel-cgw", replicas.cgw);
 
-  // SES UP
-  // await run(`oc scale sts siebel-ses --replicas=3 -n ${safeNs}`);
-  await waitForReplicas(safeNs, "siebel-ses", 3);
+  await run(`oc scale sts siebel-ses --replicas=${replicas.ses} -n ${safeNs}`);
+  await waitForReplicas(safeNs, "siebel-ses", replicas.ses);
 
-  // SAI UP
-  // await run(`oc scale sts siebel-sai --replicas=3 -n ${safeNs}`);
-  await waitForReplicas(safeNs, "siebel-sai", 3);
+  await run(`oc scale sts siebel-sai --replicas=${replicas.sai} -n ${safeNs}`);
+  await waitForReplicas(safeNs, "siebel-sai", replicas.sai);
 
   console.log("===== ENVIRONMENT RESTART FINISH =====");
 
