@@ -127,12 +127,13 @@ const PodsDashboard = ({ token }) => {
             <tr>
               <th>POD</th>
               <th>STATUS</th>
+              <th>RESTARTS</th>
             </tr>
           </thead>
           <tbody>
             {filteredPods.length > 0 ? (
               filteredPods.map((pod, index) => (
-                <tr key={index}>
+                <tr key={pod.name || index}>
                   <td className="pods-dashboard-name">{pod.name}</td>
                   <td>
                     <span
@@ -141,11 +142,14 @@ const PodsDashboard = ({ token }) => {
                       {pod.status}
                     </span>
                   </td>
+                  <td className={pod.restarts > 0 ? "pods-dashboard-restarts-warning" : ""}>
+                    {pod.restarts || 0}
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="2" className="pods-dashboard-empty">
+                <td colSpan="3" className="pods-dashboard-empty">
                   Seçili kriterlere uygun pod bulunamadı.
                 </td>
               </tr>

@@ -1,12 +1,13 @@
 import React, { useState } from "react";
+import Overview from "../components/Overview";
 import PodsDashboard from "../components/PodsDashboard";
 import ComponentList from "../components/ComponentList";
 import EnvironmentLinks from "../components/EnvironmentLinks";
 import EnvironmentRestart from "../components/EnvironmentRestart";
 import "../styles/main-layout.css";
 
-const MainLayout = ({ token, ortam, username, setToken }) => {
-  const [activeMenu, setActiveMenu] = useState("pods");
+const MainLayout = ({ token, ortam, username, handleLogout }) => {
+  const [activeMenu, setActiveMenu] = useState("overview");
   const [selectedPod, setSelectedPod] = useState(null);
   const selectMenu = (menu) => {
     setActiveMenu(menu);
@@ -22,6 +23,16 @@ const MainLayout = ({ token, ortam, username, setToken }) => {
           </span>
         </div>
         <nav className="main-nav">
+          <div
+            className={
+              activeMenu === "overview"
+                ? "main-nav-item main-nav-item-active"
+                : "main-nav-item"
+            }
+            onClick={() => selectMenu("overview")}
+          >
+            ⌂ Genel Bakış
+          </div>
           <div
             className={
               activeMenu === "pods"
@@ -68,13 +79,19 @@ const MainLayout = ({ token, ortam, username, setToken }) => {
             <div className="main-user-dot" />
             <span>{username}</span>
           </div>
-          <button onClick={() => setToken(null)} className="main-logout">
+          <button onClick={handleLogout} className="main-logout">
             Oturumu Kapat
           </button>
         </div>
       </aside>
       <main className="main-content">
-        {activeMenu === "pods" ? (
+        {activeMenu === "overview" ? (
+          <Overview
+            token={token}
+            ortam={ortam}
+            onNavigate={selectMenu}
+          />
+        ) : activeMenu === "pods" ? (
           selectedPod ? (
             <PodDetail pod={selectedPod} onBack={() => setSelectedPod(null)} />
           ) : (

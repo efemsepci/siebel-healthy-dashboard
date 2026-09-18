@@ -106,7 +106,6 @@ const App = () => {
       token={token}
       ortam={ortam}
       username={username}
-      setToken={setToken}
       handleLogout={handleLogout}
     />
   );

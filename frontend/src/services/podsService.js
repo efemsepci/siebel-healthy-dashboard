@@ -25,3 +25,17 @@ export const getPods = async (namespace, token) => {
 
   return response.json();
 };
+
+export const getNamespaceMetrics = async (namespace, token) => {
+  const response = await fetch(`/api/pods/metrics?namespace=${namespace}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error("Namespace metrikleri alınamadı");
+  }
+
+  return response.json();
+};

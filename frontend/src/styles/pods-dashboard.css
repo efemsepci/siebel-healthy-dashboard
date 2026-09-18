@@ -135,3 +135,7 @@
   background: #fee2e2;
   color: #991b1b;
 }
+.pods-dashboard-restarts-warning {
+  color: #b45309 !important;
+  font-weight: 800;
+}

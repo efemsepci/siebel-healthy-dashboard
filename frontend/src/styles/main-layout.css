@@ -87,6 +87,14 @@
   flex: 1;
   overflow-y: auto;
 }
+@media (max-width: 760px) {
+  .main-layout { flex-direction: column; height: auto; }
+  .main-sidebar { width: 100%; }
+  .main-brand { padding: 18px 24px; }
+  .main-nav { display: flex; overflow-x: auto; padding: 8px; }
+  .main-nav-item { white-space: nowrap; margin: 0 4px; }
+  .main-footer { display: none; }
+}
 .pod-detail {
   padding: 30px;
 }
